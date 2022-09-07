@@ -5,14 +5,14 @@ const twitterBtn = document.querySelector('#twitter');
 const newQuoteBtn = document.querySelector('#new-quote');
 const loader = document.querySelector('#loader')
 
-// Show Loading
-function loading() {
+// Show Loading Spinner
+function showLoadingSpinner() {
    loader.hidden = false;
    quoteContainer.hidden = true;
 }
 
-//Hide loading
-function complete() {
+//Hide Loading Spinner
+function removeLoadingSpinner() {
     if (!loader.hidden) {
         quoteContainer.hidden = false;
         loader.hidden = true;
@@ -23,7 +23,7 @@ function complete() {
 // Get Quote from API
 async function getQuote() {
     //Loading Function
-    loading()
+    showLoadingSpinner()
      const proxyUrl = 'https://whispering-tor-04671.herokuapp.com/'
     const apiUrl = 'http://api.forismatic.com/api/1.0/?method=getQuote&lang=en&format=json';
     try {
@@ -44,9 +44,15 @@ async function getQuote() {
                 quoteText.innerText = data.quoteText;
         }
         // Stop Loading, ShowQuote
-        complete()
-    } catch (error) {
-        getQuote();
+        removeLoadingSpinner();
+        }catch (error) {
+            console.log(error)
+            while (error<10) {
+                getQuote()
+        }
+        quoteText.innerText = "Can't Connect to Server";
+        authorText.style.display = "none";
+        
     }
 }
 
